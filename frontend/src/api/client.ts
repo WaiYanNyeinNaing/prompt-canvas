@@ -30,12 +30,21 @@ export async function fetchModels(): Promise<ModelInfo[]> {
 }
 
 export async function sendChat(request: ChatRequest): Promise<ChatResponse> {
+  const params = request.params ?? {};
+  const cleanedParams = Object.fromEntries(
+    Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== ''),
+  ) as ChatRequest['params'];
+  const cleanedRequest: ChatRequest = {
+    ...request,
+    params: cleanedParams,
+  };
+
   const response = await fetch(`${API_BASE}/chat`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(request),
+    body: JSON.stringify(cleanedRequest),
   });
 
   if (!response.ok) {

@@ -2,17 +2,35 @@ from __future__ import annotations
 
 from typing import Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 Role = Literal["system", "user", "assistant"]
 
 
 class GenerationParams(BaseModel):
-    temperature: Optional[float] = None
-    top_p: Optional[float] = None
-    top_k: Optional[int] = None
-    max_tokens: Optional[int] = None
+    temperature: Optional[float] = Field(default=None, ge=0, le=2)
+    top_p: Optional[float] = Field(default=None, ge=0, le=1)
+    top_k: Optional[int] = Field(default=None, ge=1)
+    max_tokens: Optional[int] = Field(default=None, ge=1)
+
+    @field_validator("temperature", "top_p", mode="before")
+    @classmethod
+    def _blank_to_none_float(cls, value):
+        if value is None:
+            return None
+        if isinstance(value, str) and value.strip() == "":
+            return None
+        return value
+
+    @field_validator("top_k", "max_tokens", mode="before")
+    @classmethod
+    def _blank_to_none_int(cls, value):
+        if value is None:
+            return None
+        if isinstance(value, str) and value.strip() == "":
+            return None
+        return value
 
 
 class ChatMessage(BaseModel):
