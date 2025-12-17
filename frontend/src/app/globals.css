@@ -1,0 +1,144 @@
+:root {
+  color-scheme: light;
+  --border: #e2e8f0;
+  --muted: #64748b;
+  --bg: #ffffff;
+  --panel: #f8fafc;
+  --error: #b91c1c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+    "Apple Color Emoji", "Segoe UI Emoji";
+  background: var(--bg);
+  color: #0f172a;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  min-height: 100vh;
+}
+
+.left-panel {
+  padding: 16px;
+  border-right: 1px solid var(--border);
+  background: var(--panel);
+}
+
+.left-panel h2 {
+  margin: 0 0 12px;
+}
+
+.left-panel select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 12px;
+}
+
+.system-prompt textarea {
+  width: 100%;
+  padding: 8px;
+  resize: vertical;
+}
+
+.params {
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.params label {
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.params input {
+  width: 100%;
+  padding: 8px;
+}
+
+.chat-panel {
+  padding: 16px;
+}
+
+.chat-panel h2 {
+  margin: 0 0 12px;
+}
+
+.chat-transcript {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  min-height: 380px;
+  background: #fff;
+}
+
+.chat-message {
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  border: 1px solid var(--border);
+}
+
+.chat-message.user {
+  background: #f1f5f9;
+}
+
+.chat-message.assistant {
+  background: #ecfeff;
+}
+
+.chat-message.pending {
+  opacity: 0.7;
+}
+
+.chat-message.error {
+  border-color: #fecaca;
+  background: #fef2f2;
+}
+
+.chat-message p {
+  margin: 6px 0 0;
+  white-space: pre-wrap;
+}
+
+.chat-input {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.chat-input input {
+  padding: 10px;
+}
+
+.chat-input button {
+  padding: 10px 14px;
+}
+
+.error {
+  color: var(--error);
+}
+
+.status {
+  color: var(--muted);
+  margin: 8px 0 0;
+}
+
+.empty {
+  color: var(--muted);
+}

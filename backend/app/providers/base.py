@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import List, Optional
 
 from pydantic import BaseModel
+from ..core.types import ChatMessage, GenerationParams
 
 
 class ModelInfo(BaseModel):
@@ -25,4 +26,10 @@ class ProviderUnavailableError(ProviderError):
 class Provider(ABC):
     @abstractmethod
     def list_models(self) -> List[ModelInfo]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def generate(
+        self, model: str, messages: List[ChatMessage], params: GenerationParams
+    ) -> str:
         raise NotImplementedError
