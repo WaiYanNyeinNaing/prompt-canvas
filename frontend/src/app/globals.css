@@ -192,6 +192,80 @@ body {
   color: var(--muted);
 }
 
+.prompt-preview {
+  border: 1px solid var(--border);
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  gap: 12px;
+}
+
+.prompt-preview-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.prompt-preview-header h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.prompt-preview-subtitle {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.prompt-preview-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.prompt-preview-meta {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.prompt-preview-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.prompt-preview-label {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.prompt-preview-value {
+  color: var(--muted);
+}
+
+.prompt-preview-section h4 {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: #0f172a;
+}
+
+.prompt-preview-body {
+  margin: 0;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #f8fafc;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  max-height: 220px;
+  overflow: auto;
+}
+
 .prompt-editor {
   display: grid;
   gap: 10px;
@@ -236,6 +310,60 @@ body {
 
 .prompt-actions button {
   padding: 8px 12px;
+}
+
+.prompt-editor-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 50;
+}
+
+.prompt-editor-modal {
+  width: min(720px, 100%);
+  max-height: 90vh;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.2);
+  display: grid;
+  gap: 12px;
+  overflow: auto;
+}
+
+.prompt-editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.prompt-editor-header h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.prompt-editor-close {
+  border: 1px solid var(--border);
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .prompt-editor-modal {
+    padding: 12px;
+  }
+
+  .prompt-editor-grid,
+  .prompt-defaults-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .system-prompt textarea {
