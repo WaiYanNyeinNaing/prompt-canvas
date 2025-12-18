@@ -14,7 +14,7 @@ Update `/compare` to load Prompt A and Prompt B templates using the existing pro
 
 ## Scope
 - No provider calls.
-- No Ollama integration.
+- No LLM provider integration.
 
 ## Definition of Done
 - `/compare` returns correct prompt metadata for A/B.

@@ -3,17 +3,17 @@
 
 ## Overview
 
-Prompt-Canvas is a **local-first web application** for designing, iterating, and comparing LLM prompt templates. The system follows a clear **layered architecture** to ensure separation of concerns, maintainability, and future extensibility. All LLM execution is performed locally via Ollama, abstracted behind a provider interface.
+Prompt-Canvas is a **local-first web application** for designing, iterating, and comparing LLM prompt templates. The system follows a clear **layered architecture** to ensure separation of concerns, maintainability, and future extensibility. All LLM execution is performed via the Gemini API, abstracted behind a provider interface.
 
 **High-level flow:**
-**Frontend (React)** → **Backend API (FastAPI)** → **LLM Provider (Ollama)** → **Local Storage (Markdown)**
+**Frontend (React)** → **Backend API (FastAPI)** → **LLM Provider (Gemini)** → **Local Storage (Markdown)**
 
 ---
 
 ## Architectural Principles
 
 * **Clear layer boundaries:** UI, API, provider, and storage are strictly separated.
-* **Local-first execution:** No cloud dependency in MVP.
+* **Local-first execution:** No cloud dependency in MVP, aside from the Gemini API call.
 * **Provider abstraction:** LLM backends are swappable without UI changes.
 * **Human-readable storage:** Prompt templates are editable outside the app.
 * **Minimal surface area:** Avoid unnecessary complexity in MVP.
@@ -65,7 +65,7 @@ prompt-canvas/
 * **Provider Interface**
 
   * Methods: `list_models()`, `generate()`
-  * Initial implementation: `OllamaProvider`
+  * Base implementation: `GeminiProvider` (API-key based)
 * **Storage Layer**
 
   * File-system based prompt storage
@@ -79,7 +79,7 @@ prompt-canvas/
 
 ## Extension Points
 
-* Additional LLM providers (OpenAI, Gemini)
+* Additional LLM providers (e.g., OpenAI, local engines)
 * Alternative storage (SQLite for indexing/history)
 * Advanced comparison and evaluation features
 
@@ -87,7 +87,7 @@ prompt-canvas/
 
 ## Constraints
 
-* Frontend must not call Ollama directly
+* Frontend must not call Gemini directly
 * No cross-layer imports
 * No new top-level directories without updating this document
 

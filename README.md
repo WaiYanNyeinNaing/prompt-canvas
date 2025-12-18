@@ -1,12 +1,12 @@
 # prompt-canvas
 
-A local-first playground for designing, versioning, and evaluating LLM prompt templates using **local models via Ollama**.
+A local-first playground for designing, versioning, and evaluating LLM prompt templates using **Gemini** as the base provider.
 
 ## What's in this repo
 
 - **Backend**: FastAPI API server (models, chat, prompt library)
 - **Frontend**: Next.js + React + TypeScript UI with ChatGPT-style output
-- **Provider layer**: Ollama provider behind an interface
+- **Provider layer**: Gemini provider behind an interface
 - **Prompt Library**: File-based prompt template storage (Markdown + YAML frontmatter)
 
 For a running status / checklist, see `docs/progress.md`.
@@ -17,7 +17,7 @@ For a running status / checklist, see `docs/progress.md`.
 
 - Python 3.9+
 - Node.js 18+
-- Ollama installed + running (`ollama serve`) and at least one model pulled (e.g. `ollama pull llama3`)
+- Gemini API access with an API key (e.g., `GEMINI_API_KEY` from Google AI Studio)
 
 ### Backend (FastAPI)
 
@@ -27,13 +27,14 @@ From repo root:
 python -m venv .venv
 source .venv/bin/activate
 pip install -U pip
-pip install fastapi uvicorn pydantic pyyaml
+pip install fastapi uvicorn pydantic pyyaml google-generativeai
+export GEMINI_API_KEY="<your key>"
 uvicorn backend.app.main:app --port 8000
 ```
 
 API endpoints:
 
-- `GET /models` — list available Ollama models
+- `GET /models` — list available Gemini models
 - `POST /chat` — run single-turn chat
 - `POST /compare` — run a two-prompt comparison (Prompt A vs Prompt B) on the same input
 - `GET /prompts` — list prompt templates
@@ -70,5 +71,5 @@ curl http://127.0.0.1:8000/models
 curl http://127.0.0.1:8000/prompts
 curl -X POST http://127.0.0.1:8000/chat \
   -H 'Content-Type: application/json' \
-  -d '{"model":"llama3:latest","system_prompt":"","user_input":"Say hi.","params":{}}'
+  -d '{"model":"gemini-1.5-pro-latest","system_prompt":"","user_input":"Say hi.","params":{}}'
 ```

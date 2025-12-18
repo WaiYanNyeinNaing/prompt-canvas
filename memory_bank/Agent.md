@@ -7,7 +7,7 @@ The goal is to produce clean, modular, reviewable code aligned with the project'
 
 ## Project Snapshot (current)
 
-- Local-first prompt playground using Ollama.
+- Local-first prompt playground using Gemini as the base provider.
 - Backend: FastAPI API with provider abstraction.
 - Frontend: Next.js + React + TypeScript.
 - Prompt storage: Markdown files with YAML frontmatter in `prompts/`.
@@ -15,8 +15,7 @@ The goal is to produce clean, modular, reviewable code aligned with the project'
 ## Implemented Features
 
 - API: `GET /models`, `POST /chat` (single-turn), `POST /compare` (A/B prompt compare), prompt CRUD.
-- Provider: `Provider.list_models()`, `Provider.generate()` with `OllamaProvider` (timeout via
-  `OLLAMA_TIMEOUT`, default 300s).
+- Provider: `Provider.list_models()`, `Provider.generate()` with `GeminiProvider` (API-key auth, configurable timeout).
 - UI: Mode tabs (Config / Prompts / Compare), chat with Markdown rendering + clear/copy, prompt
   library CRUD + apply, compare UI with model lock, A/B selectors, run compare, and "Use This Prompt"
   promotion.
@@ -25,14 +24,14 @@ The goal is to produce clean, modular, reviewable code aligned with the project'
 
 - Flow: UI -> API -> Provider (no cross-layer shortcuts).
 - Frontend calls backend directly at `http://127.0.0.1:8000` (CORS enabled).
-- Local-only: requires Ollama running.
+- Gemini access depends on a configured API key.
 - Single-turn chat only; no multi-turn history.
 
 ## Mandatory Rules
 
 - Do not change architecture decisions documented in `docs/` or ADRs.
 - Do not introduce new dependencies without explicit instruction.
-- Do not collapse layers (frontend must not call Ollama directly).
+- Do not collapse layers (frontend must not call Gemini directly).
 - Do not implement non-MVP features unless explicitly requested.
 - Prefer clarity over cleverness.
 
