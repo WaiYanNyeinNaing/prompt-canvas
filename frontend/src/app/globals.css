@@ -26,15 +26,54 @@ body {
 
 .app-shell {
   display: grid;
-  grid-template-columns: 360px 380px 1fr;
+  grid-template-columns: minmax(320px, 420px) 1fr;
   min-height: 100vh;
+}
+
+.mode-tabs {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  border-right: 1px solid var(--border);
+  background: var(--panel);
+}
+
+.mode-tabs-header {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.mode-tab {
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mode-tab.active {
+  background: #ffffff;
+  color: #0f172a;
+  border-color: var(--border);
+}
+
+.mode-tab:disabled {
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.mode-tabs-content {
+  min-height: 0;
 }
 
 .left-panel,
 .prompt-library-panel {
   padding: 16px;
-  border-right: 1px solid var(--border);
-  background: var(--panel);
+  background: transparent;
 }
 
 .prompt-library-panel {
@@ -454,8 +493,7 @@ body {
     grid-template-columns: 1fr;
   }
 
-  .left-panel,
-  .prompt-library-panel {
+  .mode-tabs {
     border-right: none;
     border-bottom: 1px solid var(--border);
   }

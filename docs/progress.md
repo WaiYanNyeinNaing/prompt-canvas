@@ -26,6 +26,7 @@
   - Model picker + system prompt editor + generation params
   - Chat panel with ChatGPT-style markdown rendering
   - Prompt Library panel (list, search, create, edit, delete, apply to chat)
+  - Mode tabs layout: **Config** / **Prompts** (Compare visible but disabled) with chat always visible
   - Uses webpack dev mode for stable long-running requests
 
 ### Known constraints / notes

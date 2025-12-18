@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import ChatPanel from './ChatPanel';
 import LeftPanel from './layout/LeftPanel';
+import ModeTabsLayout from './layout/ModeTabsLayout';
 import PromptLibraryPanel from './PromptLibraryPanel';
 import { fetchModels } from '../api/client';
 import type { GenerationParams, ModelInfo } from '../api/types';
@@ -45,20 +46,22 @@ export default function HomePage() {
   }, []);
 
   return (
-    <main className="app-shell">
-      <LeftPanel
-        models={models}
-        selectedModel={selectedModel}
-        onModelChange={setSelectedModel}
-        loading={loading}
-        error={error}
-        systemPrompt={systemPrompt}
-        onSystemPromptChange={setSystemPrompt}
-        params={params}
-        onParamsChange={setParams}
-      />
-      <PromptLibraryPanel onApplyPrompt={setSystemPrompt} />
-      <ChatPanel model={selectedModel} systemPrompt={systemPrompt} params={params} />
-    </main>
+    <ModeTabsLayout
+      configPanel={
+        <LeftPanel
+          models={models}
+          selectedModel={selectedModel}
+          onModelChange={setSelectedModel}
+          loading={loading}
+          error={error}
+          systemPrompt={systemPrompt}
+          onSystemPromptChange={setSystemPrompt}
+          params={params}
+          onParamsChange={setParams}
+        />
+      }
+      promptsPanel={<PromptLibraryPanel onApplyPrompt={setSystemPrompt} />}
+      chatPanel={<ChatPanel model={selectedModel} systemPrompt={systemPrompt} params={params} />}
+    />
   );
 }

@@ -37,6 +37,7 @@ prompt-canvas/
   * UI components, layout, and client-side state
   * Calls backend APIs only
   * Contains no LLM or provider logic
+  * Uses a mode-based layout (Config/Prompts tabs) with chat always visible
 
 * **backend/**
 

@@ -53,6 +53,14 @@ npm run dev
 
 Open `http://localhost:3000`. The frontend calls the backend directly at `http://127.0.0.1:8000` (CORS enabled).
 
+## UI notes
+
+- **Chat is always visible** on the right.
+- The left side uses **mode tabs**:
+  - **Config**: model picker, system prompt, generation params
+  - **Prompts**: prompt library (browse/search/create/edit/apply)
+  - **Compare**: visible but disabled (placeholder for future work)
+
 ## Smoke test
 
 ```bash
