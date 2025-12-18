@@ -1,6 +1,7 @@
 'use client';
 
 import React, { FormEvent, useMemo, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { sendChat } from '../api/client';
 import type { GenerationParams } from '../api/types';
 
@@ -101,7 +102,9 @@ export function ChatPanel({ model, systemPrompt, params }: ChatPanelProps) {
             }`}
           >
             <strong>{msg.role === 'user' ? 'You' : 'Assistant'}</strong>
-            <p>{msg.content}</p>
+            <div className="markdown">
+              <ReactMarkdown>{msg.content}</ReactMarkdown>
+            </div>
           </div>
         ))}
       </div>

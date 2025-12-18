@@ -24,3 +24,19 @@ export type ChatResponse = {
   model: string;
   latency_ms?: number;
 };
+
+export type PromptMeta = {
+  id: string;
+  name: string;
+  tags: string[];
+  updated_at?: string;
+};
+
+export type PromptTemplate = {
+  id: string;
+  name: string;
+  tags: string[];
+  model_defaults: GenerationParams;
+  body_md: string;
+  updated_at?: string;
+};

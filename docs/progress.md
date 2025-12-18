@@ -5,27 +5,41 @@
 - **Backend API (FastAPI)**
   - `GET /models`: lists local Ollama models
   - `POST /chat`: runs a single-turn chat (system prompt + user input) and returns assistant output + latency
+  - `GET /prompts`: lists prompt templates
+  - `GET /prompts/{id}`: fetches a single prompt template
+  - `POST /prompts`: creates a new prompt template
+  - `PUT /prompts/{id}`: updates an existing prompt template
+  - `DELETE /prompts/{id}`: deletes a prompt template
+  - CORS enabled for direct frontend calls (avoids proxy timeout issues)
+
 - **Provider abstraction**
   - `Provider.list_models()`
   - `Provider.generate(model, messages, params)`
-  - **OllamaProvider** implementation with improved timeout and error surfacing
+  - **OllamaProvider** implementation with 120s timeout and error surfacing
+
+- **Prompt Library (file-based)**
+  - Stored in `prompts/` as Markdown with YAML frontmatter
+  - CRUD operations via API
+  - Search by name/tags
+
 - **Frontend (Next.js + React + TS)**
   - Model picker + system prompt editor + generation params
-  - Chat panel (send, transcript, loading + error states)
-  - Dev proxy rewrites (`/models`, `/chat`) to the backend
+  - Chat panel with ChatGPT-style markdown rendering
+  - Prompt Library panel (list, search, create, edit, delete, apply to chat)
+  - Uses webpack dev mode for stable long-running requests
 
 ### Known constraints / notes
 
-- **Local-first**: requires Ollama running locally.
-- **Single-turn chat**: current request shape supports a system prompt and one user input per request (no multi-turn history yet).
-- **No persistence yet**: prompts/templates/history storage is not wired up.
+- **Local-first**: requires Ollama running locally
+- **Single-turn chat**: no multi-turn history yet (each request is independent)
+- **Direct backend calls**: frontend calls `http://127.0.0.1:8000` directly to avoid Next.js proxy timeout on long LLM requests
 
 ### How to run (dev)
 
-- **Backend**
+- **Backend** (without autoreload for stability)
 
 ```bash
-uvicorn backend.app.main:app --reload --port 8000
+uvicorn backend.app.main:app --port 8000
 ```
 
 - **Frontend**
@@ -40,13 +54,14 @@ npm run dev
 
 ```bash
 curl http://127.0.0.1:8000/models
+curl http://127.0.0.1:8000/prompts
 curl -X POST http://127.0.0.1:8000/chat \
   -H 'Content-Type: application/json' \
-  -d '{"model":"llama3.1","system_prompt":"","user_input":"Say hi in one sentence.","params":{}}'
+  -d '{"model":"llama3:latest","system_prompt":"","user_input":"Say hi.","params":{}}'
 ```
 
 ### Next (suggested)
 
 - Multi-turn chat history in the UI + request payload
-- Prompt template storage (`prompts/`), loading + editing in UI
 - Run history + comparison view (side-by-side outputs)
+- Prompt versioning

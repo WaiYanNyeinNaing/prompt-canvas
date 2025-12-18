@@ -49,3 +49,19 @@ class ChatResponse(BaseModel):
     assistant_output: str
     model: str
     latency_ms: Optional[int] = None
+
+
+class PromptMeta(BaseModel):
+    id: str
+    name: str
+    tags: list[str] = Field(default_factory=list)
+    updated_at: Optional[str] = None
+
+
+class PromptTemplate(BaseModel):
+    id: str
+    name: str
+    tags: list[str] = Field(default_factory=list)
+    model_defaults: GenerationParams = Field(default_factory=GenerationParams)
+    body_md: str
+    updated_at: Optional[str] = None

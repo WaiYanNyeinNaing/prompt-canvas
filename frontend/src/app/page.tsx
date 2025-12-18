@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import ChatPanel from './ChatPanel';
 import LeftPanel from './layout/LeftPanel';
+import PromptLibraryPanel from './PromptLibraryPanel';
 import { fetchModels } from '../api/client';
 import type { GenerationParams, ModelInfo } from '../api/types';
 
@@ -56,6 +57,7 @@ export default function HomePage() {
         params={params}
         onParamsChange={setParams}
       />
+      <PromptLibraryPanel onApplyPrompt={setSystemPrompt} />
       <ChatPanel model={selectedModel} systemPrompt={systemPrompt} params={params} />
     </main>
   );
