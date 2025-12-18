@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from datetime import datetime
 from typing import List
 from urllib.error import HTTPError
@@ -10,10 +11,19 @@ from urllib.request import Request, urlopen
 from .base import ModelInfo, Provider, ProviderUnavailableError, ProviderError
 from ..core.types import ChatMessage, GenerationParams
 
+# Default timeout for LLM generation (seconds). Override via OLLAMA_TIMEOUT env var.
+DEFAULT_GENERATION_TIMEOUT = 300  # 5 minutes
+
 
 class OllamaProvider(Provider):
     def __init__(self, base_url: str = "http://localhost:11434") -> None:
         self.base_url = base_url.rstrip("/")
+        # Allow configuring timeout via environment variable
+        timeout_str = os.environ.get("OLLAMA_TIMEOUT", "")
+        if timeout_str.strip().isdigit():
+            self.generation_timeout = int(timeout_str.strip())
+        else:
+            self.generation_timeout = DEFAULT_GENERATION_TIMEOUT
 
     def list_models(self) -> List[ModelInfo]:
         url = f"{self.base_url}/api/tags"
@@ -81,8 +91,9 @@ class OllamaProvider(Provider):
         )
 
         try:
-            # Generation can be slow, especially on first run while the model loads.
-            with urlopen(request, timeout=120) as response:  # noqa: S310
+            # Generation can be slow for long prompts or on first run while the model loads.
+            # Timeout is configurable via OLLAMA_TIMEOUT env var (default: 300s).
+            with urlopen(request, timeout=self.generation_timeout) as response:  # noqa: S310
                 data = json.load(response)
         except HTTPError as exc:  # pragma: no cover - runtime failure path
             # Ollama returns useful JSON error bodies; surface them.
@@ -98,7 +109,10 @@ class OllamaProvider(Provider):
         except URLError as exc:  # pragma: no cover - runtime failure path
             raise ProviderUnavailableError("Ollama is not running or unreachable.") from exc
         except TimeoutError as exc:  # pragma: no cover - runtime failure path
-            raise ProviderUnavailableError("Ollama request timed out.") from exc
+            raise ProviderUnavailableError(
+                f"Ollama request timed out after {self.generation_timeout}s. "
+                "Try a shorter prompt or increase OLLAMA_TIMEOUT."
+            ) from exc
         except Exception as exc:  # pragma: no cover - runtime failure path
             raise ProviderError("Failed to reach Ollama for generation.") from exc
 

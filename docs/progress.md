@@ -15,7 +15,7 @@
 - **Provider abstraction**
   - `Provider.list_models()`
   - `Provider.generate(model, messages, params)`
-  - **OllamaProvider** implementation with 120s timeout and error surfacing
+  - **OllamaProvider** implementation with configurable timeout (default 300s, via `OLLAMA_TIMEOUT` env var)
 
 - **Prompt Library (file-based)**
   - Stored in `prompts/` as Markdown with YAML frontmatter
@@ -40,6 +40,9 @@
 
 ```bash
 uvicorn backend.app.main:app --port 8000
+
+# For very long prompts, increase timeout (default 300s):
+OLLAMA_TIMEOUT=600 uvicorn backend.app.main:app --port 8000
 ```
 
 - **Frontend**
