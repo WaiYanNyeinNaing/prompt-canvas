@@ -112,7 +112,14 @@ export default function HomePage() {
       }
       promptsPanel={<PromptLibraryPanel onApplyPrompt={handleApplyPrompt} />}
       comparePanel={
-        <ComparePanel model={selectedModel} params={params} onPromotePrompt={handlePromotePrompt} />
+        <ComparePanel
+          model={selectedModel}
+          params={params}
+          onPromotePrompt={handlePromotePrompt}
+          models={models}
+          modelsLoading={loading}
+          modelError={error}
+        />
       }
       chatPanel={
         <ChatPanel

@@ -150,6 +150,42 @@ body {
   white-space: nowrap;
 }
 
+.compare-model-select {
+  min-width: 200px;
+  max-width: 260px;
+  padding: 6px 8px;
+  font-size: 12px;
+}
+
+.compare-model-select:disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+}
+
+.compare-model-action {
+  padding: 6px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.compare-model-action--primary {
+  border-color: #0f172a;
+  background: #0f172a;
+  color: #ffffff;
+}
+
+.compare-model-action:disabled {
+  border-color: var(--border);
+  background: #f1f5f9;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
 .compare-form {
   display: grid;
   gap: 14px;
@@ -1011,6 +1047,11 @@ body {
   .compare-model {
     max-width: 100%;
     white-space: normal;
+  }
+
+  .compare-model-select {
+    width: 100%;
+    max-width: 100%;
   }
 
   .compare-results {

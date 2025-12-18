@@ -6,6 +6,7 @@ import type {
   CompareItemResult,
   CompareResponse,
   GenerationParams,
+  ModelInfo,
   PromptMeta,
   PromptTemplate,
 } from '../api/types';
@@ -15,6 +16,9 @@ type ComparePanelProps = {
   model: string;
   params: GenerationParams;
   onPromotePrompt: (template: PromptTemplate) => void;
+  models: ModelInfo[];
+  modelsLoading: boolean;
+  modelError: string;
 };
 
 function resolvePromptName(
@@ -44,7 +48,16 @@ function resolveResult(
   return byId ?? response.results[fallbackIndex] ?? null;
 }
 
-export default function ComparePanel({ model, params, onPromotePrompt }: ComparePanelProps) {
+export default function ComparePanel({
+  model,
+  params,
+  onPromotePrompt,
+  models,
+  modelsLoading,
+  modelError,
+}: ComparePanelProps) {
+  const [compareModel, setCompareModel] = useState(model);
+  const [modelLocked, setModelLocked] = useState(false);
   const [prompts, setPrompts] = useState<PromptMeta[]>([]);
   const [promptAId, setPromptAId] = useState('');
   const [promptBId, setPromptBId] = useState('');
@@ -59,9 +72,11 @@ export default function ComparePanel({ model, params, onPromotePrompt }: Compare
   const [promoteAError, setPromoteAError] = useState('');
   const [promoteBError, setPromoteBError] = useState('');
 
-  const modelReady = useMemo(() => Boolean(model && model.trim()), [model]);
+  const modelReady = useMemo(() => Boolean(compareModel && compareModel.trim()), [compareModel]);
+  const promptsEnabled = modelLocked && modelReady;
   const canRun =
     modelReady &&
+    modelLocked &&
     promptAId &&
     promptBId &&
     promptAId !== promptBId &&
@@ -88,6 +103,29 @@ export default function ComparePanel({ model, params, onPromotePrompt }: Compare
   }, [loadPrompts]);
 
   useEffect(() => {
+    if (modelLocked) return;
+    const modelNames = new Set(models.map((item) => item.name));
+    let nextModel = compareModel;
+
+    if (nextModel && !modelNames.has(nextModel)) {
+      nextModel = '';
+    }
+
+    if (!nextModel && model && modelNames.has(model)) {
+      nextModel = model;
+    }
+
+    if (!nextModel && models.length) {
+      nextModel = models[0]?.name ?? '';
+    }
+
+    if (nextModel !== compareModel) {
+      setCompareModel(nextModel);
+    }
+  }, [compareModel, model, modelLocked, models]);
+
+  useEffect(() => {
+    if (!modelLocked) return;
     if (!prompts.length) {
       if (promptAId) setPromptAId('');
       if (promptBId) setPromptBId('');
@@ -104,7 +142,32 @@ export default function ComparePanel({ model, params, onPromotePrompt }: Compare
 
     if (nextA !== promptAId) setPromptAId(nextA);
     if (nextB !== promptBId) setPromptBId(nextB);
-  }, [prompts, promptAId, promptBId]);
+  }, [prompts, promptAId, promptBId, modelLocked]);
+
+  const handleModelChange = (value: string) => {
+    setCompareModel(value);
+    setResponse(null);
+    setRunError('');
+    setPromoteAError('');
+    setPromoteBError('');
+  };
+
+  const handleLockModel = () => {
+    if (!modelReady) {
+      setRunError('Select a model to lock.');
+      return;
+    }
+    setModelLocked(true);
+    setRunError('');
+  };
+
+  const handleUnlockModel = () => {
+    setModelLocked(false);
+    setResponse(null);
+    setRunError('');
+    setPromoteAError('');
+    setPromoteBError('');
+  };
 
   const handlePromptAChange = (value: string) => {
     setPromptAId(value);
@@ -158,6 +221,10 @@ export default function ComparePanel({ model, params, onPromotePrompt }: Compare
       setRunError('Select a model before running compare.');
       return;
     }
+    if (!modelLocked) {
+      setRunError('Lock a model before running compare.');
+      return;
+    }
     if (!promptAId || !promptBId) {
       setRunError('Select two prompts to compare.');
       return;
@@ -180,7 +247,7 @@ export default function ComparePanel({ model, params, onPromotePrompt }: Compare
     setPromoteBError('');
     try {
       const data = await comparePrompts({
-        model,
+        model: compareModel,
         prompt_a_id: promptAId,
         prompt_b_id: promptBId,
         user_input: trimmedInput,
@@ -205,11 +272,16 @@ export default function ComparePanel({ model, params, onPromotePrompt }: Compare
   const canPromoteB = Boolean(promptBId && resultB && !promoteBLoading && !running);
   const canSwap =
     Boolean(promptAId && promptBId && promptAId !== promptBId) &&
+    modelLocked &&
     !running &&
     !loadingPrompts &&
     !promoteALoading &&
     !promoteBLoading;
-  const modelLabel = modelReady ? model : 'Select a model in Config';
+  const modelLabel = modelReady ? compareModel : 'Select a model';
+  const modelSelectDisabled = modelsLoading || !models.length || modelLocked || Boolean(modelError);
+  const canLockModel = modelReady && !modelLocked && !modelsLoading && !modelError && !running;
+  const canUnlockModel = modelLocked && !running;
+  const promptSelectDisabled = loadingPrompts || !prompts.length || !promptsEnabled;
 
   const handleSwap = () => {
     if (!promptAId || !promptBId) return;
@@ -251,7 +323,45 @@ export default function ComparePanel({ model, params, onPromotePrompt }: Compare
           </div>
           <div className="compare-model-readout">
             <span className="compare-model-label">Model</span>
-            <span className="compare-model">{modelLabel}</span>
+            {modelLocked ? (
+              <>
+                <span className="compare-model">{modelLabel}</span>
+                <button
+                  type="button"
+                  className="compare-model-action"
+                  onClick={handleUnlockModel}
+                  disabled={!canUnlockModel}
+                >
+                  Unlock
+                </button>
+              </>
+            ) : (
+              <>
+                <select
+                  className="compare-model-select"
+                  value={compareModel}
+                  onChange={(event) => handleModelChange(event.target.value)}
+                  disabled={modelSelectDisabled}
+                >
+                  <option value="" disabled>
+                    {modelsLoading ? 'Loading models...' : 'Select a model'}
+                  </option>
+                  {models.map((modelOption) => (
+                    <option key={modelOption.name} value={modelOption.name}>
+                      {modelOption.name}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  className="compare-model-action compare-model-action--primary"
+                  onClick={handleLockModel}
+                  disabled={!canLockModel}
+                >
+                  Lock Model
+                </button>
+              </>
+            )}
           </div>
         </div>
         <form className="compare-form" onSubmit={handleCompare}>
@@ -261,10 +371,14 @@ export default function ComparePanel({ model, params, onPromotePrompt }: Compare
               <select
                 value={promptAId}
                 onChange={(event) => handlePromptAChange(event.target.value)}
-                disabled={loadingPrompts || !prompts.length}
+                disabled={promptSelectDisabled}
               >
                 <option value="" disabled>
-                  {loadingPrompts ? 'Loading prompts...' : 'Select a prompt'}
+                  {!promptsEnabled
+                    ? 'Lock a model to choose prompts'
+                    : loadingPrompts
+                      ? 'Loading prompts...'
+                      : 'Select a prompt'}
                 </option>
                 {prompts.map((prompt) => (
                   <option key={prompt.id} value={prompt.id}>
@@ -278,10 +392,14 @@ export default function ComparePanel({ model, params, onPromotePrompt }: Compare
               <select
                 value={promptBId}
                 onChange={(event) => handlePromptBChange(event.target.value)}
-                disabled={loadingPrompts || !prompts.length}
+                disabled={promptSelectDisabled}
               >
                 <option value="" disabled>
-                  {loadingPrompts ? 'Loading prompts...' : 'Select a prompt'}
+                  {!promptsEnabled
+                    ? 'Lock a model to choose prompts'
+                    : loadingPrompts
+                      ? 'Loading prompts...'
+                      : 'Select a prompt'}
                 </option>
                 {prompts.map((prompt) => (
                   <option key={prompt.id} value={prompt.id}>
@@ -296,15 +414,23 @@ export default function ComparePanel({ model, params, onPromotePrompt }: Compare
             <textarea
               value={userInput}
               onChange={(event) => handleInputChange(event.target.value)}
-              placeholder={modelReady ? 'Type a message to compare...' : 'Select a model first'}
+              placeholder={
+                modelLocked ? 'Type a message to compare...' : 'Lock a model to continue'
+              }
               rows={5}
             />
           </label>
+          {modelError && <p className="error">{modelError}</p>}
           {listError && <p className="error">{listError}</p>}
           {!listError && !loadingPrompts && !hasEnoughPrompts && (
             <p className="status">Create at least two prompts to run a comparison.</p>
           )}
-          {!modelReady && <p className="status">Select a model in Config to run compare.</p>}
+          {!modelReady && !modelError && (
+            <p className="status">Select a model to start comparing.</p>
+          )}
+          {modelReady && !modelLocked && (
+            <p className="status">Lock the model to enable prompt selection.</p>
+          )}
           {runError && <p className="error">{runError}</p>}
           <div className="compare-actions">
             <button
