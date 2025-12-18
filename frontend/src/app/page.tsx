@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import ChatPanel from './ChatPanel';
+import ComparePlaceholderPanel from './ComparePlaceholderPanel';
 import LeftPanel from './layout/LeftPanel';
 import ModeTabsLayout from './layout/ModeTabsLayout';
 import PromptLibraryPanel from './PromptLibraryPanel';
@@ -61,6 +62,7 @@ export default function HomePage() {
         />
       }
       promptsPanel={<PromptLibraryPanel onApplyPrompt={setSystemPrompt} />}
+      comparePanel={<ComparePlaceholderPanel />}
       chatPanel={<ChatPanel model={selectedModel} systemPrompt={systemPrompt} params={params} />}
     />
   );

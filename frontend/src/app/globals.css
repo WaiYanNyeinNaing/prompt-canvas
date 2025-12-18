@@ -76,6 +76,57 @@ body {
   background: transparent;
 }
 
+.compare-panel {
+  padding: 16px;
+}
+
+.compare-card {
+  border: 1px dashed var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  background: #ffffff;
+  display: grid;
+  gap: 16px;
+}
+
+.compare-card-header h2 {
+  margin: 0 0 6px;
+  font-size: 18px;
+}
+
+.compare-note {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.compare-selectors {
+  display: grid;
+  gap: 12px;
+}
+
+.compare-selectors label {
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.compare-selectors select {
+  width: 100%;
+  padding: 8px;
+}
+
+.compare-run {
+  justify-self: start;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #f1f5f9;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
 .config-accordions {
   display: grid;
   gap: 12px;
@@ -397,7 +448,59 @@ body {
 }
 
 .chat-panel h2 {
-  margin: 0 0 12px;
+  margin: 0;
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.chat-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.clear-button {
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #475569;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.clear-button:hover {
+  background: #f8fafc;
+}
+
+.clear-button:active {
+  transform: translateY(1px);
+}
+
+.clear-button.confirm {
+  border-color: #fecaca;
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.clear-button.confirm:hover {
+  background: #fecaca;
+}
+
+.clear-button.cancel {
+  color: #64748b;
+}
+
+.clear-button:disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+  cursor: not-allowed;
 }
 
 .chat-transcript {

@@ -30,8 +30,10 @@ export function ChatPanel({ model, systemPrompt, params }: ChatPanelProps) {
   const [sending, setSending] = useState(false);
   const [status, setStatus] = useState('');
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
+  const [confirmClear, setConfirmClear] = useState(false);
 
   const modelReady = useMemo(() => Boolean(model && model.trim()), [model]);
+  const canClear = messages.length > 0 || sending;
 
   const copyToClipboard = async (text: string, messageId: string) => {
     try {
@@ -83,6 +85,7 @@ export function ChatPanel({ model, systemPrompt, params }: ChatPanelProps) {
     setInput('');
     setSending(true);
     setStatus('');
+    setConfirmClear(false);
 
     try {
       const response = await sendChat({
@@ -114,9 +117,49 @@ export function ChatPanel({ model, systemPrompt, params }: ChatPanelProps) {
     }
   };
 
+  const handleClear = () => {
+    if (!canClear) return;
+    if (!confirmClear) {
+      setConfirmClear(true);
+      return;
+    }
+    setMessages([]);
+    setSending(false);
+    setStatus('');
+    setCopiedMessageId(null);
+    setConfirmClear(false);
+  };
+
+  const handleCancelClear = () => {
+    setConfirmClear(false);
+  };
+
   return (
     <div className="chat-panel">
-      <h2>Chat</h2>
+      <div className="chat-header">
+        <h2>Chat</h2>
+        <div className="chat-actions">
+          {confirmClear ? (
+            <>
+              <button type="button" className="clear-button confirm" onClick={handleClear}>
+                Confirm
+              </button>
+              <button type="button" className="clear-button cancel" onClick={handleCancelClear}>
+                Cancel
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              className="clear-button"
+              onClick={handleClear}
+              disabled={!canClear}
+            >
+              Clear
+            </button>
+          )}
+        </div>
+      </div>
       <div className="chat-transcript">
         {messages.length === 0 && <p className="empty">Start a conversation by sending a message.</p>}
         {messages.map((msg) => (

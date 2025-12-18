@@ -2,17 +2,19 @@
 
 import React, { useState } from 'react';
 
-type ModeTab = 'config' | 'prompts';
+type ModeTab = 'config' | 'prompts' | 'compare';
 
 type ModeTabsLayoutProps = {
   configPanel: React.ReactNode;
   promptsPanel: React.ReactNode;
+  comparePanel: React.ReactNode;
   chatPanel: React.ReactNode;
 };
 
 export default function ModeTabsLayout({
   configPanel,
   promptsPanel,
+  comparePanel,
   chatPanel,
 }: ModeTabsLayoutProps) {
   const [activeTab, setActiveTab] = useState<ModeTab>('config');
@@ -45,11 +47,12 @@ export default function ModeTabsLayout({
           </button>
           <button
             type="button"
+            id="mode-tab-compare"
             role="tab"
-            aria-disabled="true"
-            className="mode-tab"
-            disabled
-            title="Compare mode coming soon"
+            aria-selected={activeTab === 'compare'}
+            aria-controls="mode-panel-compare"
+            className={activeTab === 'compare' ? 'mode-tab active' : 'mode-tab'}
+            onClick={() => setActiveTab('compare')}
           >
             Compare
           </button>
@@ -72,6 +75,15 @@ export default function ModeTabsLayout({
             hidden={activeTab !== 'prompts'}
           >
             {promptsPanel}
+          </div>
+          <div
+            id="mode-panel-compare"
+            role="tabpanel"
+            aria-labelledby="mode-tab-compare"
+            className="mode-panel"
+            hidden={activeTab !== 'compare'}
+          >
+            {comparePanel}
           </div>
         </div>
       </section>
