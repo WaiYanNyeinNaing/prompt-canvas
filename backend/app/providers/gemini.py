@@ -10,12 +10,20 @@ from google.api_core import exceptions as google_exceptions
 from .base import ModelInfo, Provider, ProviderError, ProviderUnavailableError
 from ..core.types import ChatMessage, GenerationParams
 
-DEFAULT_GEMINI_MODEL = "gemini-3-flash-preview"
+DEFAULT_GEMINI_MODELS = [
+    "gemini-2.0-flash",
+    "gemini-2.0-pro",
+    "gemini-2.5-flash",
+    "gemini-2.5-pro",
+    "gemini-3-flash-preview",
+    "gemini-3-pro-preview",
+    "gemini-3-pro-image-preview",
+]
 
 
 def _parse_models(raw: str) -> List[str]:
     models = [model.strip() for model in raw.split(",") if model.strip()]
-    return models or [DEFAULT_GEMINI_MODEL]
+    return models or list(DEFAULT_GEMINI_MODELS)
 
 
 def _parse_timeout(raw: str) -> Optional[float]:

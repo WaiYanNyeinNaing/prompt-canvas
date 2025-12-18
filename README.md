@@ -18,7 +18,7 @@ For a running status / checklist, see `docs/progress.md`.
 - Python 3.9+
 - Node.js 18+
 - Gemini API key in `GEMINI_API_KEY` (see `env.sample`)
-- Optional: `GEMINI_MODELS` (comma-separated) to configure the model list (defaults to `gemini-3-flash-preview`)
+- Optional: `GEMINI_MODELS` (comma-separated) to configure the model list (defaults to `gemini-2.0-flash`, `gemini-2.0-pro`, `gemini-2.5-flash`, `gemini-2.5-pro`, `gemini-3-flash-preview`, `gemini-3-pro-preview`, `gemini-3-pro-image-preview`)
 - Internet access (Gemini API is cloud-hosted)
 
 ### Backend (FastAPI)
