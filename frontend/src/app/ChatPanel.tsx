@@ -2,6 +2,7 @@
 
 import React, { FormEvent, useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { sendChat } from '../api/client';
 import type { GenerationParams } from '../api/types';
 
@@ -127,12 +128,12 @@ export function ChatPanel({ model, systemPrompt, params }: ChatPanelProps) {
           >
             <div className="chat-message-header">
               <strong>{msg.role === 'user' ? 'You' : 'Assistant'}</strong>
-              {msg.role === 'assistant' && !msg.pending && !msg.error && (
+              {!msg.pending && !msg.error && (
                 <button
                   type="button"
                   className="copy-button"
                   onClick={() => copyToClipboard(msg.content, msg.id)}
-                  aria-label="Copy assistant message"
+                  aria-label={`Copy ${msg.role} message`}
                   title="Copy"
                 >
                   {copiedMessageId === msg.id ? 'Copied' : 'Copy'}
@@ -140,7 +141,7 @@ export function ChatPanel({ model, systemPrompt, params }: ChatPanelProps) {
               )}
             </div>
             <div className="markdown">
-              <ReactMarkdown>{msg.content}</ReactMarkdown>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
             </div>
           </div>
         ))}

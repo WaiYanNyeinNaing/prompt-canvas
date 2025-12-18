@@ -283,6 +283,7 @@ body {
   font-size: 15px;
   line-height: 1.6;
   color: #1e293b;
+  overflow-x: auto;
 }
 
 .chat-message .markdown p {
@@ -371,6 +372,53 @@ body {
   border: none;
   border-top: 1px solid #e2e8f0;
   margin: 1em 0;
+}
+
+/* Markdown tables */
+.chat-message .markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.75em 0;
+  font-size: 14px;
+  overflow-x: auto;
+  display: block;
+}
+
+.chat-message .markdown thead {
+  background: #f8fafc;
+}
+
+.chat-message .markdown th,
+.chat-message .markdown td {
+  border: 1px solid #e2e8f0;
+  padding: 8px 12px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.chat-message .markdown th {
+  font-weight: 600;
+  color: #0f172a;
+  background: #f1f5f9;
+}
+
+.chat-message .markdown td {
+  color: #334155;
+}
+
+.chat-message .markdown tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+.chat-message .markdown tr:hover {
+  background: #f1f5f9;
+}
+
+/* Allow table cells to wrap for longer content */
+.chat-message .markdown td:last-child,
+.chat-message .markdown th:last-child {
+  white-space: normal;
+  min-width: 150px;
 }
 
 .chat-input {
