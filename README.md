@@ -35,6 +35,7 @@ API endpoints:
 
 - `GET /models` — list available Ollama models
 - `POST /chat` — run single-turn chat
+- `POST /compare` — run a two-prompt comparison (Prompt A vs Prompt B) on the same input
 - `GET /prompts` — list prompt templates
 - `GET /prompts/{id}` — get a prompt template
 - `POST /prompts` — create a prompt template
@@ -59,7 +60,7 @@ Open `http://localhost:3000`. The frontend calls the backend directly at `http:/
 - The left side uses **mode tabs**:
   - **Config**: model picker, system prompt, generation params
   - **Prompts**: prompt library (browse/search/create/edit/apply)
-  - **Compare**: placeholder panel (prep work; comparison execution coming soon)
+- **Compare**: run Prompt A vs Prompt B side-by-side, then **promote** the winner to the System Prompt
 - Chat header shows the **active prompt label** (selected prompt name or “Custom Prompt”) and a **Clear** action.
 
 ## Smoke test

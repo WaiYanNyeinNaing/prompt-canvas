@@ -5,6 +5,7 @@
 - **Backend API (FastAPI)**
   - `GET /models`: lists local Ollama models
   - `POST /chat`: runs a single-turn chat (system prompt + user input) and returns assistant output + latency
+  - `POST /compare`: compares two prompt templates side-by-side on the same input
   - `GET /prompts`: lists prompt templates
   - `GET /prompts/{id}`: fetches a single prompt template
   - `POST /prompts`: creates a new prompt template
@@ -28,7 +29,8 @@
   - Chat header actions: clear transcript + copy messages
   - Active prompt indicator (shows selected prompt name / “Custom Prompt”)
   - Prompt Library panel (list, search, create, edit, delete, apply to chat)
-  - Mode tabs layout: **Config** / **Prompts** / **Compare (placeholder)** with chat always visible
+  - Compare tab: select Prompt A/B + input, run compare, and promote winner to Config
+  - Mode tabs layout: **Config** / **Prompts** / **Compare** with chat always visible (compare hides chat to focus)
   - Uses webpack dev mode for stable long-running requests
 
 ### Known constraints / notes

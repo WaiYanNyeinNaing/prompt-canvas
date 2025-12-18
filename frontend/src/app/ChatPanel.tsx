@@ -1,10 +1,9 @@
 'use client';
 
 import React, { FormEvent, useMemo, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import { sendChat } from '../api/client';
 import type { GenerationParams } from '../api/types';
+import MarkdownMessage from './shared/MarkdownMessage';
 
 type ChatMessage = {
   id: string;
@@ -194,9 +193,7 @@ export function ChatPanel({ model, systemPrompt, activePromptName, params }: Cha
                 </button>
               )}
             </div>
-            <div className="markdown">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
-            </div>
+            <MarkdownMessage content={msg.content} />
           </div>
         ))}
       </div>

@@ -13,6 +13,7 @@ type LeftPanelProps = {
   onSystemPromptChange: (value: string) => void;
   params: GenerationParams;
   onParamsChange: (params: GenerationParams) => void;
+  promotionNotice?: string;
 };
 
 function parseFloatOrUndefined(value: string): number | undefined {
@@ -37,9 +38,15 @@ export function LeftPanel({
   onSystemPromptChange,
   params,
   onParamsChange,
+  promotionNotice,
 }: LeftPanelProps) {
   return (
     <div className="left-panel">
+      {promotionNotice && (
+        <div className="promotion-notice" role="status">
+          {promotionNotice}
+        </div>
+      )}
       <div className="config-accordions">
         <details className="config-accordion">
           <summary>Model Selection</summary>

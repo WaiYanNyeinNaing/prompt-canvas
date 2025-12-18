@@ -25,6 +25,28 @@ export type ChatResponse = {
   latency_ms?: number;
 };
 
+export type CompareRequest = {
+  model: string;
+  prompt_a_id: string;
+  prompt_b_id: string;
+  user_input: string;
+  params: GenerationParams;
+};
+
+export type CompareItemResult = {
+  prompt_id: string;
+  prompt_name: string;
+  assistant_output?: string | null;
+  error?: string | null;
+  latency_ms?: number;
+};
+
+export type CompareResponse = {
+  model: string;
+  input: string;
+  results: CompareItemResult[];
+};
+
 export type PromptMeta = {
   id: string;
   name: string;

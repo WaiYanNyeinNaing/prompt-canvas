@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .api.routes_chat import router as chat_router
+from .api.routes_compare import router as compare_router
 from .api.routes_models import router as models_router
 from .api.routes_prompts import router as prompts_router
 
@@ -23,6 +24,7 @@ def create_app() -> FastAPI:
 
     app.include_router(models_router)
     app.include_router(chat_router)
+    app.include_router(compare_router)
     app.include_router(prompts_router)
     return app
 

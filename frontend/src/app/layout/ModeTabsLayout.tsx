@@ -2,13 +2,15 @@
 
 import React, { useState } from 'react';
 
-type ModeTab = 'config' | 'prompts' | 'compare';
+export type ModeTab = 'config' | 'prompts' | 'compare';
 
 type ModeTabsLayoutProps = {
   configPanel: React.ReactNode;
   promptsPanel: React.ReactNode;
   comparePanel: React.ReactNode;
   chatPanel: React.ReactNode;
+  activeTab?: ModeTab;
+  onTabChange?: (tab: ModeTab) => void;
 };
 
 export default function ModeTabsLayout({
@@ -16,20 +18,25 @@ export default function ModeTabsLayout({
   promptsPanel,
   comparePanel,
   chatPanel,
+  activeTab,
+  onTabChange,
 }: ModeTabsLayoutProps) {
-  const [activeTab, setActiveTab] = useState<ModeTab>('config');
+  const [internalTab, setInternalTab] = useState<ModeTab>('config');
+  const currentTab = activeTab ?? internalTab;
+  const setActiveTab = onTabChange ?? setInternalTab;
+  const isCompare = currentTab === 'compare';
 
   return (
-    <main className="app-shell">
+    <main className={isCompare ? 'app-shell app-shell--compare' : 'app-shell'}>
       <section className="mode-tabs">
         <div className="mode-tabs-header" role="tablist" aria-label="Modes">
           <button
             type="button"
             id="mode-tab-config"
             role="tab"
-            aria-selected={activeTab === 'config'}
+            aria-selected={currentTab === 'config'}
             aria-controls="mode-panel-config"
-            className={activeTab === 'config' ? 'mode-tab active' : 'mode-tab'}
+            className={currentTab === 'config' ? 'mode-tab active' : 'mode-tab'}
             onClick={() => setActiveTab('config')}
           >
             Config
@@ -38,9 +45,9 @@ export default function ModeTabsLayout({
             type="button"
             id="mode-tab-prompts"
             role="tab"
-            aria-selected={activeTab === 'prompts'}
+            aria-selected={currentTab === 'prompts'}
             aria-controls="mode-panel-prompts"
-            className={activeTab === 'prompts' ? 'mode-tab active' : 'mode-tab'}
+            className={currentTab === 'prompts' ? 'mode-tab active' : 'mode-tab'}
             onClick={() => setActiveTab('prompts')}
           >
             Prompts
@@ -49,9 +56,9 @@ export default function ModeTabsLayout({
             type="button"
             id="mode-tab-compare"
             role="tab"
-            aria-selected={activeTab === 'compare'}
+            aria-selected={currentTab === 'compare'}
             aria-controls="mode-panel-compare"
-            className={activeTab === 'compare' ? 'mode-tab active' : 'mode-tab'}
+            className={currentTab === 'compare' ? 'mode-tab active' : 'mode-tab'}
             onClick={() => setActiveTab('compare')}
           >
             Compare
@@ -63,7 +70,7 @@ export default function ModeTabsLayout({
             role="tabpanel"
             aria-labelledby="mode-tab-config"
             className="mode-panel"
-            hidden={activeTab !== 'config'}
+            hidden={currentTab !== 'config'}
           >
             {configPanel}
           </div>
@@ -72,7 +79,7 @@ export default function ModeTabsLayout({
             role="tabpanel"
             aria-labelledby="mode-tab-prompts"
             className="mode-panel"
-            hidden={activeTab !== 'prompts'}
+            hidden={currentTab !== 'prompts'}
           >
             {promptsPanel}
           </div>
@@ -81,7 +88,7 @@ export default function ModeTabsLayout({
             role="tabpanel"
             aria-labelledby="mode-tab-compare"
             className="mode-panel"
-            hidden={activeTab !== 'compare'}
+            hidden={currentTab !== 'compare'}
           >
             {comparePanel}
           </div>

@@ -1,4 +1,12 @@
-import { ChatRequest, ChatResponse, ModelInfo, PromptMeta, PromptTemplate } from './types';
+import {
+  ChatRequest,
+  ChatResponse,
+  CompareRequest,
+  CompareResponse,
+  ModelInfo,
+  PromptMeta,
+  PromptTemplate,
+} from './types';
 
 // Call backend directly to avoid Next.js dev proxy timeout on long LLM requests
 const API_BASE = 'http://127.0.0.1:8000';
@@ -94,6 +102,31 @@ export async function sendChat(request: ChatRequest): Promise<ChatResponse> {
   }, 1);
 
   return parseJsonResponse<ChatResponse>(response, 'Failed to send chat request');
+}
+
+export async function comparePrompts(request: CompareRequest): Promise<CompareResponse> {
+  const params = request.params ?? {};
+  const cleanedParams = Object.fromEntries(
+    Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== ''),
+  ) as CompareRequest['params'];
+  const cleanedRequest: CompareRequest = {
+    ...request,
+    params: cleanedParams,
+  };
+
+  const response = await fetchWithRetry(
+    `${API_BASE}/compare`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(cleanedRequest),
+    },
+    1,
+  );
+
+  return parseJsonResponse<CompareResponse>(response, 'Failed to run compare');
 }
 
 export async function listPrompts(query?: string): Promise<PromptMeta[]> {

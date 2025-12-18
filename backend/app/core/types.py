@@ -51,6 +51,28 @@ class ChatResponse(BaseModel):
     latency_ms: Optional[int] = None
 
 
+class CompareRequest(BaseModel):
+    model: str
+    prompt_a_id: str
+    prompt_b_id: str
+    user_input: str = ""
+    params: GenerationParams = Field(default_factory=GenerationParams)
+
+
+class CompareItemResult(BaseModel):
+    prompt_id: str
+    prompt_name: str
+    assistant_output: Optional[str] = None
+    error: Optional[str] = None
+    latency_ms: Optional[int] = None
+
+
+class CompareResponse(BaseModel):
+    model: str
+    input: str
+    results: list[CompareItemResult] = Field(min_length=2, max_length=2)
+
+
 class PromptMeta(BaseModel):
     id: str
     name: str
