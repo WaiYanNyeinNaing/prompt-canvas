@@ -59,7 +59,8 @@ Open `http://localhost:3000`. The frontend calls the backend directly at `http:/
 - The left side uses **mode tabs**:
   - **Config**: model picker, system prompt, generation params
   - **Prompts**: prompt library (browse/search/create/edit/apply)
-  - **Compare**: visible but disabled (placeholder for future work)
+  - **Compare**: placeholder panel (prep work; comparison execution coming soon)
+- Chat header shows the **active prompt label** (selected prompt name or “Custom Prompt”) and a **Clear** action.
 
 ## Smoke test
 

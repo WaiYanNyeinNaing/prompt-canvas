@@ -1,4 +1,13 @@
 ---
-description: Before pushing local changes to GitHub, perform the following steps in order:  Verify all modified files comply with .gitignore rules. Update README.md and PROGRESS.md to reflect any new features or code changes. Proceed with pushing changes to the repository. Follow these steps exactly before executing any Git push command
-alwaysApply: false
+alwaysApply: true
 ---
+Before pushing to GitHub, ensure the following are in order:
+
+- Verify `.gitignore` includes:
+  - Virtual environment folders (e.g., `venv`)
+  - Secret files (e.g., `.env`)
+
+- Update the following files:
+  - `README.md`
+  - `requirements.txt`
+  - `progress.md`

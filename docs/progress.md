@@ -25,8 +25,10 @@
 - **Frontend (Next.js + React + TS)**
   - Model picker + system prompt editor + generation params
   - Chat panel with ChatGPT-style markdown rendering
+  - Chat header actions: clear transcript + copy messages
+  - Active prompt indicator (shows selected prompt name / “Custom Prompt”)
   - Prompt Library panel (list, search, create, edit, delete, apply to chat)
-  - Mode tabs layout: **Config** / **Prompts** (Compare visible but disabled) with chat always visible
+  - Mode tabs layout: **Config** / **Prompts** / **Compare (placeholder)** with chat always visible
   - Uses webpack dev mode for stable long-running requests
 
 ### Known constraints / notes

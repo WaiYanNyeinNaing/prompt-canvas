@@ -11,7 +11,7 @@ import {
 import type { GenerationParams, PromptMeta, PromptTemplate } from '../api/types';
 
 type PromptLibraryPanelProps = {
-  onApplyPrompt: (body: string) => void;
+  onApplyPrompt: (body: string, name?: string) => void;
 };
 
 const createEmptyTemplate = (): PromptTemplate => ({
@@ -275,7 +275,7 @@ export function PromptLibraryPanel({ onApplyPrompt }: PromptLibraryPanelProps) {
                 <div className="prompt-preview-actions">
                   <button
                     type="button"
-                    onClick={() => onApplyPrompt(selectedPrompt.body_md)}
+                    onClick={() => onApplyPrompt(selectedPrompt.body_md, selectedPrompt.name)}
                     disabled={!selectedPrompt.body_md}
                   >
                     Apply to System Prompt
@@ -449,7 +449,7 @@ export function PromptLibraryPanel({ onApplyPrompt }: PromptLibraryPanelProps) {
               <div className="prompt-actions">
                 <button
                   type="button"
-                  onClick={() => onApplyPrompt(draft.body_md)}
+                  onClick={() => onApplyPrompt(draft.body_md, draft.name)}
                   disabled={!draft.body_md}
                 >
                   Apply to System Prompt

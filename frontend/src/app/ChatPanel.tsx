@@ -17,6 +17,7 @@ type ChatMessage = {
 type ChatPanelProps = {
   model: string;
   systemPrompt: string;
+  activePromptName: string;
   params: GenerationParams;
 };
 
@@ -24,7 +25,7 @@ function createId() {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
-export function ChatPanel({ model, systemPrompt, params }: ChatPanelProps) {
+export function ChatPanel({ model, systemPrompt, activePromptName, params }: ChatPanelProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
@@ -34,6 +35,7 @@ export function ChatPanel({ model, systemPrompt, params }: ChatPanelProps) {
 
   const modelReady = useMemo(() => Boolean(model && model.trim()), [model]);
   const canClear = messages.length > 0 || sending;
+  const promptLabel = activePromptName?.trim() || 'Custom Prompt';
 
   const copyToClipboard = async (text: string, messageId: string) => {
     try {
@@ -137,7 +139,16 @@ export function ChatPanel({ model, systemPrompt, params }: ChatPanelProps) {
   return (
     <div className="chat-panel">
       <div className="chat-header">
-        <h2>Chat</h2>
+        <div className="chat-title">
+          <h2>Chat</h2>
+          <span
+            className="chat-prompt-indicator"
+            aria-label={`Active prompt: ${promptLabel}`}
+            title={`Active prompt: ${promptLabel}`}
+          >
+            {promptLabel}
+          </span>
+        </div>
         <div className="chat-actions">
           {confirmClear ? (
             <>

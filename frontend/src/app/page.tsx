@@ -13,6 +13,7 @@ export default function HomePage() {
   const [models, setModels] = useState<ModelInfo[]>([]);
   const [selectedModel, setSelectedModel] = useState('');
   const [systemPrompt, setSystemPrompt] = useState('You are a helpful assistant.');
+  const [activePromptName, setActivePromptName] = useState('Custom Prompt');
   const [params, setParams] = useState<GenerationParams>({
     temperature: 0.7,
     top_p: 0.9,
@@ -46,6 +47,16 @@ export default function HomePage() {
     loadModels();
   }, []);
 
+  const handleSystemPromptChange = (value: string) => {
+    setSystemPrompt(value);
+    setActivePromptName('Custom Prompt');
+  };
+
+  const handleApplyPrompt = (body: string, name?: string) => {
+    setSystemPrompt(body);
+    setActivePromptName(name?.trim() || 'Custom Prompt');
+  };
+
   return (
     <ModeTabsLayout
       configPanel={
@@ -56,14 +67,21 @@ export default function HomePage() {
           loading={loading}
           error={error}
           systemPrompt={systemPrompt}
-          onSystemPromptChange={setSystemPrompt}
+          onSystemPromptChange={handleSystemPromptChange}
           params={params}
           onParamsChange={setParams}
         />
       }
-      promptsPanel={<PromptLibraryPanel onApplyPrompt={setSystemPrompt} />}
+      promptsPanel={<PromptLibraryPanel onApplyPrompt={handleApplyPrompt} />}
       comparePanel={<ComparePlaceholderPanel />}
-      chatPanel={<ChatPanel model={selectedModel} systemPrompt={systemPrompt} params={params} />}
+      chatPanel={
+        <ChatPanel
+          model={selectedModel}
+          systemPrompt={systemPrompt}
+          activePromptName={activePromptName}
+          params={params}
+        />
+      }
     />
   );
 }
