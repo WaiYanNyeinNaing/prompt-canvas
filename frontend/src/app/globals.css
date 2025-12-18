@@ -76,6 +76,51 @@ body {
   background: transparent;
 }
 
+.config-accordions {
+  display: grid;
+  gap: 12px;
+}
+
+.config-accordion {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.config-accordion summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  cursor: pointer;
+  list-style: none;
+}
+
+.config-accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.config-accordion summary::after {
+  content: '+';
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.config-accordion[open] summary::after {
+  content: '-';
+}
+
+.accordion-body {
+  padding: 0 12px 12px;
+  display: grid;
+  gap: 10px;
+}
+
 .prompt-library-panel {
   display: flex;
   flex-direction: column;
@@ -89,7 +134,7 @@ body {
 .left-panel select {
   width: 100%;
   padding: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 0;
 }
 
 .prompt-library-header {
@@ -200,7 +245,7 @@ body {
 }
 
 .params {
-  margin-top: 12px;
+  margin-top: 0;
   display: grid;
   gap: 10px;
 }

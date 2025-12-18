@@ -40,96 +40,106 @@ export function LeftPanel({
 }: LeftPanelProps) {
   return (
     <div className="left-panel">
-      <h2>Model</h2>
-      {loading && <p>Loading models…</p>}
-      {error && !loading && <p className="error">{error}</p>}
-      {!loading && !error && (
-        <select
-          value={selectedModel}
-          onChange={(event) => onModelChange(event.target.value)}
-        >
-          {models.map((model) => (
-            <option key={model.name} value={model.name}>
-              {model.name}
-            </option>
-          ))}
-        </select>
-      )}
+      <div className="config-accordions">
+        <details className="config-accordion">
+          <summary>Model Selection</summary>
+          <div className="accordion-body">
+            {loading && <p>Loading models…</p>}
+            {error && !loading && <p className="error">{error}</p>}
+            {!loading && !error && (
+              <select
+                value={selectedModel}
+                onChange={(event) => onModelChange(event.target.value)}
+              >
+                {models.map((model) => (
+                  <option key={model.name} value={model.name}>
+                    {model.name}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
+        </details>
 
-      <div className="system-prompt">
-        <h3>System Prompt</h3>
-        <textarea
-          value={systemPrompt}
-          onChange={(event) => onSystemPromptChange(event.target.value)}
-          placeholder="You are a helpful assistant."
-          rows={6}
-        />
-      </div>
+        <details className="config-accordion" open>
+          <summary>System Prompt</summary>
+          <div className="accordion-body system-prompt">
+            <textarea
+              value={systemPrompt}
+              onChange={(event) => onSystemPromptChange(event.target.value)}
+              placeholder="You are a helpful assistant."
+              rows={6}
+            />
+          </div>
+        </details>
 
-      <div className="params">
-        <h3>Generation Params</h3>
-        <label>
-          Temperature
-          <input
-            type="number"
-            step="0.1"
-            min="0"
-            max="2"
-            value={params.temperature ?? ''}
-            onChange={(event) =>
-              onParamsChange({
-                ...params,
-                temperature: parseFloatOrUndefined(event.target.value),
-              })
-            }
-          />
-        </label>
-        <label>
-          Top P
-          <input
-            type="number"
-            step="0.05"
-            min="0"
-            max="1"
-            value={params.top_p ?? ''}
-            onChange={(event) =>
-              onParamsChange({
-                ...params,
-                top_p: parseFloatOrUndefined(event.target.value),
-              })
-            }
-          />
-        </label>
-        <label>
-          Top K
-          <input
-            type="number"
-            step="1"
-            min="1"
-            value={params.top_k ?? ''}
-            onChange={(event) =>
-              onParamsChange({
-                ...params,
-                top_k: parseIntOrUndefined(event.target.value),
-              })
-            }
-          />
-        </label>
-        <label>
-          Max Tokens
-          <input
-            type="number"
-            step="16"
-            min="1"
-            value={params.max_tokens ?? ''}
-            onChange={(event) =>
-              onParamsChange({
-                ...params,
-                max_tokens: parseIntOrUndefined(event.target.value),
-              })
-            }
-          />
-        </label>
+        <details className="config-accordion">
+          <summary>Generation Parameters</summary>
+          <div className="accordion-body params">
+            <label>
+              Temperature
+              <input
+                type="number"
+                step="0.1"
+                min="0"
+                max="2"
+                value={params.temperature ?? ''}
+                onChange={(event) =>
+                  onParamsChange({
+                    ...params,
+                    temperature: parseFloatOrUndefined(event.target.value),
+                  })
+                }
+              />
+            </label>
+            <label>
+              Top P
+              <input
+                type="number"
+                step="0.05"
+                min="0"
+                max="1"
+                value={params.top_p ?? ''}
+                onChange={(event) =>
+                  onParamsChange({
+                    ...params,
+                    top_p: parseFloatOrUndefined(event.target.value),
+                  })
+                }
+              />
+            </label>
+            <label>
+              Top K
+              <input
+                type="number"
+                step="1"
+                min="1"
+                value={params.top_k ?? ''}
+                onChange={(event) =>
+                  onParamsChange({
+                    ...params,
+                    top_k: parseIntOrUndefined(event.target.value),
+                  })
+                }
+              />
+            </label>
+            <label>
+              Max Tokens
+              <input
+                type="number"
+                step="16"
+                min="1"
+                value={params.max_tokens ?? ''}
+                onChange={(event) =>
+                  onParamsChange({
+                    ...params,
+                    max_tokens: parseIntOrUndefined(event.target.value),
+                  })
+                }
+              />
+            </label>
+          </div>
+        </details>
       </div>
     </div>
   );
