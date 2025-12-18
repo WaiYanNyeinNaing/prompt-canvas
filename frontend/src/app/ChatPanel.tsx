@@ -28,8 +28,32 @@ export function ChatPanel({ model, systemPrompt, params }: ChatPanelProps) {
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
   const [status, setStatus] = useState('');
+  const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
 
   const modelReady = useMemo(() => Boolean(model && model.trim()), [model]);
+
+  const copyToClipboard = async (text: string, messageId: string) => {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'absolute';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+      setCopiedMessageId(messageId);
+      window.setTimeout(() => setCopiedMessageId((prev) => (prev === messageId ? null : prev)), 1200);
+    } catch (err) {
+      setStatus('Copy failed.');
+    }
+  };
 
   const handleSend = async (event?: FormEvent) => {
     event?.preventDefault();
@@ -101,7 +125,20 @@ export function ChatPanel({ model, systemPrompt, params }: ChatPanelProps) {
               msg.error ? 'error' : ''
             }`}
           >
-            <strong>{msg.role === 'user' ? 'You' : 'Assistant'}</strong>
+            <div className="chat-message-header">
+              <strong>{msg.role === 'user' ? 'You' : 'Assistant'}</strong>
+              {msg.role === 'assistant' && !msg.pending && !msg.error && (
+                <button
+                  type="button"
+                  className="copy-button"
+                  onClick={() => copyToClipboard(msg.content, msg.id)}
+                  aria-label="Copy assistant message"
+                  title="Copy"
+                >
+                  {copiedMessageId === msg.id ? 'Copied' : 'Copy'}
+                </button>
+              )}
+            </div>
             <div className="markdown">
               <ReactMarkdown>{msg.content}</ReactMarkdown>
             </div>
