@@ -1,5 +1,10 @@
+from pathlib import Path
+
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / ".env")
 
 from .api.routes_chat import router as chat_router
 from .api.routes_compare import router as compare_router

@@ -6,17 +6,24 @@ from fastapi import APIRouter, HTTPException
 
 from ..core.types import ChatMessage, CompareItemResult, CompareRequest, CompareResponse
 from ..providers.base import ProviderError, ProviderUnavailableError
-from ..providers.ollama import OllamaProvider
+from ..providers.gemini import GeminiProvider
 from ..storage.prompts_fs import get_prompt
 
 router = APIRouter()
-provider = OllamaProvider()
+provider = GeminiProvider()
+
+
+def _validate_model(model: str) -> None:
+    available = {item.name for item in provider.list_models()}
+    if model not in available:
+        raise HTTPException(status_code=400, detail="Unknown model requested.")
 
 
 @router.post("/compare", response_model=CompareResponse)
 async def compare_prompts(request: CompareRequest) -> CompareResponse:
     if not request.model or not request.model.strip():
         raise HTTPException(status_code=400, detail="Model is required.")
+    _validate_model(request.model.strip())
     if not request.user_input or not request.user_input.strip():
         raise HTTPException(status_code=400, detail="User input is required.")
     if request.prompt_a_id == request.prompt_b_id:
@@ -55,7 +62,7 @@ async def compare_prompts(request: CompareRequest) -> CompareResponse:
                 prompt_id=prompt.id,
                 prompt_name=prompt.name,
                 assistant_output=None,
-                error=str(exc) or "Failed to generate response.",
+                error=str(exc) or "Failed to generate response from Gemini.",
                 latency_ms=latency_ms,
             )
 
@@ -70,6 +77,6 @@ async def compare_prompts(request: CompareRequest) -> CompareResponse:
     try:
         results = [run_generation(prompt_a), run_generation(prompt_b)]
     except ProviderUnavailableError as exc:
-        raise HTTPException(status_code=503, detail="Ollama is not running or unreachable.") from exc
+        raise HTTPException(status_code=503, detail="Gemini is not reachable.") from exc
 
     return CompareResponse(model=request.model, input=request.user_input, results=results)

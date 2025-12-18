@@ -3,7 +3,7 @@
 ### Implemented
 
 - **Backend API (FastAPI)**
-  - `GET /models`: lists local Ollama models
+  - `GET /models`: lists configured Gemini models
   - `POST /chat`: runs a single-turn chat (system prompt + user input) and returns assistant output + latency
   - `POST /compare`: compares two prompt templates side-by-side on the same input
   - `GET /prompts`: lists prompt templates
@@ -16,7 +16,8 @@
 - **Provider abstraction**
   - `Provider.list_models()`
   - `Provider.generate(model, messages, params)`
-  - **OllamaProvider** implementation with configurable timeout (default 300s, via `OLLAMA_TIMEOUT` env var)
+  - **GeminiProvider** implementation (Google GenAI SDK)
+  - Configuration: `GEMINI_API_KEY` required, `GEMINI_MODELS` optional (comma-separated)
 
 - **Prompt Library (file-based)**
   - Stored in `prompts/` as Markdown with YAML frontmatter
@@ -35,7 +36,7 @@
 
 ### Known constraints / notes
 
-- **Local-first**: requires Ollama running locally
+- **Cloud LLM dependency**: requires Gemini API access + `GEMINI_API_KEY`
 - **Single-turn chat**: no multi-turn history yet (each request is independent)
 - **Direct backend calls**: frontend calls `http://127.0.0.1:8000` directly to avoid Next.js proxy timeout on long LLM requests
 
@@ -46,8 +47,7 @@
 ```bash
 uvicorn backend.app.main:app --port 8000
 
-# For very long prompts, increase timeout (default 300s):
-OLLAMA_TIMEOUT=600 uvicorn backend.app.main:app --port 8000
+# For long prompts, you may need to increase client timeouts on the frontend / network.
 ```
 
 - **Frontend**
@@ -65,7 +65,7 @@ curl http://127.0.0.1:8000/models
 curl http://127.0.0.1:8000/prompts
 curl -X POST http://127.0.0.1:8000/chat \
   -H 'Content-Type: application/json' \
-  -d '{"model":"llama3:latest","system_prompt":"","user_input":"Say hi.","params":{}}'
+  -d '{"model":"gemini-3-flash-preview","system_prompt":"","user_input":"Say hi.","params":{}}'
 ```
 
 ### Next (suggested)

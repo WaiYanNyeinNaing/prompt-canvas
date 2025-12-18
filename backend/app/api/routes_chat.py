@@ -8,11 +8,17 @@ from fastapi import APIRouter, HTTPException
 
 from ..core.types import ChatMessage, ChatRequest, ChatResponse
 from ..providers.base import ProviderError, ProviderUnavailableError
-from ..providers.ollama import OllamaProvider
+from ..providers.gemini import GeminiProvider
 
 router = APIRouter()
-provider = OllamaProvider()
+provider = GeminiProvider()
 logger = logging.getLogger(__name__)
+
+
+def _validate_model(model: str) -> None:
+    available = {item.name for item in provider.list_models()}
+    if model not in available:
+        raise HTTPException(status_code=400, detail="Unknown model requested.")
 
 
 @router.post("/chat", response_model=ChatResponse)
@@ -30,6 +36,7 @@ async def run_chat(request: ChatRequest) -> ChatResponse:
             "BadRequest",
         )
         raise HTTPException(status_code=400, detail="Model is required.")
+    _validate_model(request.model.strip())
 
     messages: List[ChatMessage] = []
     if request.system_prompt:
@@ -54,7 +61,7 @@ async def run_chat(request: ChatRequest) -> ChatResponse:
             latency_ms,
             exc.__class__.__name__,
         )
-        raise HTTPException(status_code=503, detail="Ollama is not running or unreachable.") from exc
+        raise HTTPException(status_code=503, detail="Gemini is not reachable.") from exc
     except ProviderError as exc:
         latency_ms = int((time.monotonic() - started_at) * 1000)
         logger.warning(
@@ -64,7 +71,10 @@ async def run_chat(request: ChatRequest) -> ChatResponse:
             latency_ms,
             exc.__class__.__name__,
         )
-        raise HTTPException(status_code=502, detail=str(exc) or "Failed to generate response.") from exc
+        raise HTTPException(
+            status_code=502,
+            detail=str(exc) or "Failed to generate response from Gemini.",
+        ) from exc
 
     latency_ms = int((time.monotonic() - started_at) * 1000)
     logger.info(
